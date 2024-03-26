@@ -95,7 +95,35 @@ export const routes = [
     method: 'PATCH',
     path: buildRoutePath('/tasks/:id/complete'),
     handler: (request, response) => {
-      // todo
+      const { id } = request.params
+
+      // find
+      const taskExists = database.getById('tasks', id)
+
+      if (!taskExists) {
+        const responseBody = {
+          type: 'error',
+          message: 'Task does not exists'
+        }
+      
+        return response.writeHead(404).end(JSON.stringify(responseBody))
+      }
+
+      if (taskExists.completedAt) {
+        const responseBody = {
+          type: 'error',
+          message: 'Task has already been completed'
+        }
+      
+        return response.writeHead(400).end(JSON.stringify(responseBody))
+      }
+
+      //update
+      database.update('tasks', id, {
+        completedAt: new Date(),
+        updatedAt: new Date(),
+      })
+
       return response.writeHead(204).end()
     }
   },
