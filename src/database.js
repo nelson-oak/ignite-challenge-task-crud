@@ -34,7 +34,13 @@ export class Database {
   }
 
   getById(table, id) {
-    //todo
+    if (!Array.isArray(this.#database[table])) {
+      return undefined
+    }
+
+    const row = this.#database[table].find(item => item.id === id)
+
+    return row
   }
 
   insert(table, data) {
@@ -47,8 +53,19 @@ export class Database {
     this.#persist()
   }
 
-  update(table, search) {
-    // todo
+  update(table, id, data) {
+    if (!Array.isArray(this.#database[table])) {
+      return
+    }
+
+    const rowIdx = this.#database[table].findIndex(item => item.id === id)
+
+    if (rowIdx > -1) {
+      this.#database[table][rowIdx] = {
+        ...this.#database[table][rowIdx],
+        ...data
+      }
+    }
   }
 
   delete(table, search) {

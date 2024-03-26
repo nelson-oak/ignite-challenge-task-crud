@@ -56,7 +56,38 @@ export const routes = [
     method: 'PUT',
     path: buildRoutePath('/tasks/:id'),
     handler: (request, response) => {
-      // todo
+      const { id } = request.params
+      const { title, description } = request.body
+      
+      if (!title || !description) {
+        const responseBody = {
+          type: 'error',
+          message: 'Title and Description cannot be empty'
+        }
+      
+        return response.writeHead(400).end(JSON.stringify(responseBody))
+      }
+
+      // find
+      const taskExists = database.getById('tasks', id)
+
+      if (!taskExists) {
+        const responseBody = {
+          type: 'error',
+          message: 'Task does not exists'
+        }
+      
+        return response.writeHead(404).end(JSON.stringify(responseBody))
+     
+      }
+
+      //update
+      database.update('tasks', id, {
+        title,
+        description,
+        updatedAt: new Date(),
+      })
+
       return response.writeHead(204).end()
     }
   },
