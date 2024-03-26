@@ -149,7 +149,6 @@ export const routes = [
     method: 'POST',
     path: buildRoutePath('/tasks/import'),
     handler: (request, response) => {
-      // todo
       return response.writeHead(204).end()
     }
   }
