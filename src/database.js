@@ -68,7 +68,17 @@ export class Database {
     }
   }
 
-  delete(table, search) {
-    // todo
+  delete(table, id) {
+    if (!Array.isArray(this.#database[table])) {
+      return
+    }
+
+    const rowIdx = this.#database[table].findIndex(item => item.id === id)
+
+    if (rowIdx > -1) {
+      this.#database[table].splice(rowIdx, 1)
+    }
+    
+    this.#persist()
   }
 }
